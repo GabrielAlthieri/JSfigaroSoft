@@ -1,3 +1,4 @@
+br\upf\projetobarber\controller\BarbeiroController.class
 br\upf\projetobarber\resources\JakartaEE10Resource.class
 br\upf\projetobarber\entity\BarbeiroEntity.class
 br\upf\projetobarber\entity\ServicosEntity.class
