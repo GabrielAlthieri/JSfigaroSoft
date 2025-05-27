@@ -1,9 +1,0 @@
-br\upf\projetobarber\controller\BarbeiroController.class
-br\upf\projetobarber\resources\JakartaEE10Resource.class
-br\upf\projetobarber\entity\BarbeiroEntity.class
-br\upf\projetobarber\entity\ServicosEntity.class
-br\upf\projetobarber\entity\AgendaEntity.class
-br\upf\projetobarber\entity\ClienteEntity.class
-br\upf\projetobarber\controller\ClienteController.class
-br\upf\projetobarber\JakartaRestConfiguration.class
-br\upf\projetobarber\controller\ServicoController.class

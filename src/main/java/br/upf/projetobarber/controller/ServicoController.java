@@ -5,8 +5,9 @@
 package br.upf.projetobarber.controller;
 
 
-import br.upf.projetobarber.entity.AgendaEntity;
+
 import br.upf.projetobarber.entity.ClienteEntity;
+import br.upf.projetobarber.entity.ServicosEntity;
 import jakarta.inject.Named;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
@@ -25,28 +26,29 @@ public class ServicoController implements Serializable {
     }
     
     
-    private AgendaEntity agenda = new AgendaEntity();
+    private ServicosEntity servico = new ServicosEntity();
     
-    private List<AgendaEntity> agendaList = new ArrayList<>();
+    private List<ServicosEntity> servicoList = new ArrayList<>();
 
-    public AgendaEntity getAgenda() {
-        return agenda;
+    public ServicosEntity getServico() {
+        return servico;
     }
 
-    public void setAgenda(AgendaEntity agenda) {
-        this.agenda = agenda;
+    public void setServico(ServicosEntity servico) {
+        this.servico = servico;
     }
 
-    public List<AgendaEntity> getAgendaList() {
-        return agendaList;
+    public List<ServicosEntity> getServicoList() {
+        return servicoList;
     }
 
-    public void setAgendaList(List<AgendaEntity> agendaList) {
-        this.agendaList = agendaList;
+    public void setServicoList(List<ServicosEntity> servicoList) {
+        this.servicoList = servicoList;
     }
 
-  
-  
+   
+
+ 
    
 }
 
