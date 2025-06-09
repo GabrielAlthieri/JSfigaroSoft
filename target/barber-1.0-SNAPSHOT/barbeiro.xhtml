@@ -1,0 +1,168 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">
+        <h:outputText value="Barbeiro"/>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="frmList">
+            <p:growl id="growl" showDetail="true" />
+            <h:panelGroup id="pngList">
+                <p:dataTable id="datalist" value="#{barbeiroController.barbeiroList}" var="item"
+                             selectionMode="single" selection="#{barbeiroController.selected}"
+                             widgetVar="datalistBarbeiroWidgetVar"
+                             rowKey="#{item.id}"
+                             paginator="true"
+                             rows="5"
+                             rowsPerPageTemplate="5,10,50,100"
+                             emptyMessage="Nenhum barbeiro cadastrado...">
+
+                    <p:ajax event="rowSelect" update="btnEdit btnDelete btnView"/>
+                    <p:ajax event="rowUnselect" update="btnEdit btnDelete btnView"/>
+
+                    <p:column width="4%" sortBy="#{item.id}" filterBy="#{item.id}">
+                        <f:facet name="header"><h:outputText value="ID"/></f:facet>
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>
+
+                    <p:column width="10%" sortBy="#{item.nome}" filterBy="#{item.nome}">
+                        <f:facet name="header"><h:outputText value="Nome"/></f:facet>
+                        <h:outputText value="#{item.nome}"/>
+                    </p:column>
+
+                    <p:column width="6%" sortBy="#{item.dataNascimento}" filterBy="#{item.dataNascimento}">
+                        <f:facet name="header"><h:outputText value="Nascimento"/></f:facet>
+                        <h:outputText value="#{item.dataNascimento}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column width="8%" sortBy="#{item.email}" filterBy="#{item.email}">
+                        <f:facet name="header"><h:outputText value="Email"/></f:facet>
+                        <h:outputText value="#{item.email}"/>
+                    </p:column>
+
+                    <p:column width="4%" sortBy="#{item.senha}" filterBy="#{item.senha}">
+                        <f:facet name="header"><h:outputText value="Senha"/></f:facet>
+                        <h:outputText value="#{item.senha}"/>
+                    </p:column>
+
+                    <f:facet name="footer">
+                        <p:commandButton id="btnCreate" value="Incluir Barbeiro" icon="pi pi-file"
+                                         action="#{barbeiroController.prepareAdicionar}"
+                                         update=":CreateForm"
+                                         oncomplete="PF('dlgCreate').show()"
+                                         styleClass="botao-verde"
+                                         style="margin-right: 8px;" />
+
+                        <p:commandButton id="btnEdit" value="Editar Barbeiro" icon="pi pi-user-edit"
+                                         update="formEdit"
+                                         oncomplete="PF('dlgEdit').show()"
+                                         disabled="#{empty barbeiroController.selected}"
+                                         styleClass="botao-laranja"
+                                         style="margin-right: 8px;" />
+
+                        <p:commandButton id="btnDelete" value="Excluir Barbeiro" icon="pi pi-trash"
+                                         actionListener="#{barbeiroController.deletarBarbeiro}"
+                                         update=":frmList"
+                                         disabled="#{empty barbeiroController.selected}"
+                                         styleClass="botao-vermelho"
+                                         style="margin-right: 8px;">
+                            <p:confirm header="Confirmar Exclusão" message="Você confirma exclusão do registro?" icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:commandButton id="btnView" value="Detalhes do Barbeiro" icon="pi pi-eye"
+                                         update="formView"
+                                         oncomplete="PF('dlgView').show()"
+                                         disabled="#{empty barbeiroController.selected}"
+                                         styleClass="botao-azul"/>
+                    </f:facet>
+                </p:dataTable>
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" />
+                </p:confirmDialog>
+            </h:panelGroup>
+        </h:form>
+
+        <!-- Diálogo: Novo Barbeiro -->
+        <p:dialog header="Novo Barbeiro" widgetVar="dlgCreate" modal="true" resizable="false" appendTo="@(body)">
+            <h:form id="CreateForm">
+                <p:growl id="growl" showDetail="true" />
+                <h:panelGrid columns="2" rendered="#{barbeiroController.barbeiro != null}">
+                    <p:outputLabel value="Nome:" for="iptNome"/>
+                    <p:inputText id="iptNome" value="#{barbeiroController.barbeiro.nome}" required="true" maxlength="50"/>
+
+                    <p:outputLabel value="Nascimento:" for="iptNasc"/>
+                    <p:inputMask id="iptNasc" value="#{barbeiroController.barbeiro.dataNascimento}" mask="99/99/9999" required="true">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </p:inputMask>
+
+                    <p:outputLabel value="Email:" for="iptEmail"/>
+                    <p:inputText id="iptEmail" value="#{barbeiroController.barbeiro.email}" required="true"/>
+
+                    <p:outputLabel value="Senha:" for="iptSenha"/>
+                    <p:inputText id="iptSenha" value="#{barbeiroController.barbeiro.senha}" required="true"/>
+                </h:panelGrid>
+
+                <p:commandButton value="Salvar" icon="pi pi-save" actionListener="#{barbeiroController.adicionarBarbeiro}"
+                                 update=":frmList, CreateForm" oncomplete="PF('dlgCreate').hide()"/>
+            </h:form>
+        </p:dialog>
+
+        <!-- Diálogo: Editar Barbeiro -->
+        <p:dialog header="Editar Barbeiro" widgetVar="dlgEdit" modal="true" resizable="false" appendTo="@(body)">
+            <h:form id="formEdit">
+                <p:growl id="growl" showDetail="true" />
+                <h:panelGrid columns="2" rendered="#{barbeiroController.selected != null}">
+                    <p:outputLabel value="ID:"/>
+                    <p:inputText value="#{barbeiroController.selected.id}" disabled="true"/>
+
+                    <p:outputLabel value="Nome:"/>
+                    <p:inputText value="#{barbeiroController.selected.nome}" required="true"/>
+
+                    <p:outputLabel value="Nascimento:"/>
+                    <p:inputMask value="#{barbeiroController.selected.dataNascimento}" mask="99/99/9999">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </p:inputMask>
+
+                    <p:outputLabel value="Email:"/>
+                    <p:inputText value="#{barbeiroController.selected.email}" required="true"/>
+
+                    <p:outputLabel value="Senha:"/>
+                    <p:inputText value="#{barbeiroController.selected.senha}" required="true"/>
+                </h:panelGrid>
+
+                <p:commandButton value="Salvar" icon="pi pi-save" update="@form, :frmList"
+                                 oncomplete="PF('dlgEdit').hide()" action="#{barbeiroController.editarBarbeiro}"/>
+            </h:form>
+        </p:dialog>
+
+        <!-- Diálogo: Visualizar -->
+        <p:dialog header="Detalhes do Barbeiro" widgetVar="dlgView" modal="true" resizable="false" appendTo="@(body)">
+            <h:form id="formView">
+                <h:panelGrid columns="2" rendered="#{barbeiroController.selected != null}">
+                    <p:outputLabel value="ID:"/>
+                    <p:outputLabel value="#{barbeiroController.selected.id}"/>
+
+                    <p:outputLabel value="Nome:"/>
+                    <p:outputLabel value="#{barbeiroController.selected.nome}"/>
+
+                    <p:outputLabel value="Nascimento:"/>
+                    <h:outputText value="#{barbeiroController.selected.dataNascimento}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+
+                    <p:outputLabel value="Email:"/>
+                    <p:outputLabel value="#{barbeiroController.selected.email}"/>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
